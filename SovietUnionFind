@@ -1,0 +1,37 @@
+from collections import defaultdict
+import sys
+
+inputs = iter(sys.stdin.readlines())
+n, q = map(int, next(inputs).split())
+
+areas = [i for i in range(n+1)]
+pertenece=defaultdict(set)
+
+def agregar(x, y):
+    y = areas[y]
+    x = areas[x]
+    areas[y] = x
+    pertenece[x] = pertenece[x] | pertenece[y]
+    
+    for i in pertenece[y]:
+        areas[i]=x
+
+    pertenece[y] = set()
+    pertenece[x].add(y)
+
+def soberanos(x):
+    x = areas[x]
+    for i in pertenece[x]:
+        areas[i]=i
+    
+    pertenece[x] = set()
+
+
+for _ in range(q):
+    entrada = next(inputs).split()
+    if entrada[0]=="a":
+        agregar(int(entrada[1]), int(entrada[2]))
+    elif entrada[0] == "b":
+        soberanos(int(entrada[1]))
+    else:
+        print(areas[int(entrada[1])])
